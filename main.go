@@ -1,11 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"os/exec"
-
-	"github.com/docopt/docopt-go"
+    "fmt"
+    "os/exec"
+    "github.com/docopt/docopt-go"
+    "github.com/crielly/mongosnap/lvmsnap"
 )
+
 
 func main() {
 	usage := `mongosnap
@@ -26,16 +27,5 @@ Options:
 	size := arguments["--size"].(string)
 	name := arguments["--name"].(string)
 	path := arguments["--path"].(string)
-	lvmSnap(size, name, path)
-}
-
-func lvmSnap(size, name, path string) {
-	cmd := fmt.Sprintf("lvcreate -L %sM -s -n %s %s", size, name, path)
-	fmt.Println(cmd)
-	run := exec.Command("bash", "-c", cmd)
-	stdoutStderr, err := run.CombinedOutput()
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Printf("%s\n", stdoutStderr)
+	
 }
