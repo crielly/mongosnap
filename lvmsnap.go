@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os/exec"
 
 	"github.com/docopt/docopt-go"
@@ -20,20 +19,23 @@ Options:
 	-s --size	Size of the snapshot
 	-p --path	Path to snap
 `
-	arguments, _ := docopt.Parse(usage, nil, true, "mongosnap", false)
-	size := arguments["<size>"].(string)
-	name := arguments["<name>"].(string)
-	path := arguments["<path>"].(string)
-	fmt.Println(arguments)
+	arguments, err := docopt.Parse(usage, nil, true, "", false)
+	if err != nil {
+		fmt.Println(err)
+	}
+	size := arguments["--size"].(string)
+	name := arguments["--name"].(string)
+	path := arguments["--path"].(string)
 	lvmSnap(size, name, path)
 }
 
 func lvmSnap(size, name, path string) {
-	cmd := fmt.Sprintf("lvcreate -L%sM -s -n %s %s", size, name, path)
-	run := exec.Command(cmd)
+	cmd := fmt.Sprintf("lvcreate -L %sM -s -n %s %s", size, name, path)
+	fmt.Println(cmd)
+	run := exec.Command("bash", "-c", cmd)
 	stdoutStderr, err := run.CombinedOutput()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	fmt.Printf("%s\n", stdoutStderr)
 }
