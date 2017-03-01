@@ -1,16 +1,15 @@
 package main
 
 import (
-    "fmt"
-    "os/exec"
-    "github.com/docopt/docopt-go"
-    "github.com/crielly/mongosnap/lvmsnap"
-)
+	"fmt"
 
+	"github.com/crielly/mongosnap/lvmsnap"
+	"github.com/docopt/docopt-go"
+)
 
 func main() {
 	usage := `mongosnap
-	
+
 Usage:
 	mongosnap --name=<name> --size=<size> --path=<path>
 
@@ -24,8 +23,11 @@ Options:
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	size := arguments["--size"].(string)
 	name := arguments["--name"].(string)
 	path := arguments["--path"].(string)
-	
+
+	lvmsnap.LvmSnap(size, name, path)
+
 }
