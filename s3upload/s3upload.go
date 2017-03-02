@@ -6,36 +6,40 @@ import (
 	"log"
 	"os"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/rlmcpherson/s3gof3r"
 )
 
-func main() {
-	file, err := os.Open("/home/crielly/DEV/tc-vars.tfvars")
+// log.Fatal() implies os.Exit(1)
+func logerror(err error) {
 	if err != nil {
-		log.Fatal("Failed to open file", err)
+		log.Fatalf("%s\n", err)
 	}
+}
 
-	reader, writer := io.Pipe()
+// S3upload streams compressed output to S3
+func S3upload(toarchive, s3bucket, object string) {
+	keys, err := s3gof3r.EnvKeys()
 
-	go func() {
-		gw := gzip.NewWriter(writer)
-		io.Copy(gw, file)
+	// Open bucket we want to write a file to
+	s3 := s3gof3r.New("", keys)
+	bucket := s3.Bucket(s3bucket)
 
-		file.Close()
-		gw.Close()
-		writer.Close()
-	}()
+	// open a PutWriter for S3 upload
+	s3writer, err := bucket.PutWriter(object, nil, nil)
+	logerror(err)
+	defer s3writer.Close()
 
-	uploader := s3manager.NewUploader(nil)
-	result, err := uploader.Upload(&s3manager.UploadInput{
-		Body:   reader,
-		Bucket: aws.String("360pi-ops"),
-		Key:    aws.String("mongosnap/somefile.gz"),
-	})
-	if err != nil {
-		log.Fatalln("Failed to Upload", err)
-	}
+	// Open a compressed writer to handle gzip and pass it to S3 writer
+	zipwriter := gzip.NewWriter(s3writer)
+	defer zipwriter.Close()
 
-	log.Println("Successfully upload to", result.Location)
+	// Open files we want archived
+	file, err := os.Open(toarchive)
+	logerror(err)
+	defer file.Close()
+
+	// Pass opened file to compression writer
+	_, err = io.Copy(zipwriter, file)
+	logerror(err)
+
 }
