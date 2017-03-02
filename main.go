@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/crielly/mongosnap/logger"
 	"github.com/crielly/mongosnap/s3upload"
 	"github.com/docopt/docopt-go"
 )
@@ -11,27 +12,32 @@ func main() {
 	usage := `mongosnap
 
 Usage:
-	mongosnap --snapname=(<snapname>) --size=(<size>) --path=(<path>)
+	mongosnap --snapname=<snapname> --snapsize=<snapsize> --snappath=<snappath> --filepath=<filepath> --bucket=<bucket> --object=<object>
 
 Options:
-	-h --help	Show usage information
+	-h --help		Show usage information
 	-n --snapname	Snapshot name
-	-s --size	Size of the snapshot
+	-s --snapsize	Size of the snapshot
 	-p --snappath	Path to snap
+	-f --filepath	File to archive
+	-b --bucket		S3 bucket
+	-o --object		S3 object path
 `
 	arguments, err := docopt.Parse(usage, nil, true, "", false)
-	if err != nil {
-		fmt.Println(err)
-	}
+	logger.LogError(err)
 
-	size := arguments["--size"].(string)
-	name := arguments["--name"].(string)
-	path := arguments["--path"].(string)
+	snapsize := arguments["--snapsize"].(string)
+	snapname := arguments["--snapname"].(string)
+	snappath := arguments["--snappath"].(string)
+	filepath := arguments["--filepath"].(string)
+	bucket := arguments["--bucket"].(string)
+	object := arguments["--object"].(string)
 
-	fmt.Println(size, name, path)
+	fmt.Println(snapsize, snapname, snappath)
+	fmt.Println(filepath, bucket, object)
 
 	// lvmsnap.LvmSnap(size, name, path)
 
-	s3upload.S3upload()
+	s3upload.S3upload(filepath, bucket, object)
 
 }
