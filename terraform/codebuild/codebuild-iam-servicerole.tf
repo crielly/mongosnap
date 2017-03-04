@@ -34,7 +34,8 @@ resource "aws_iam_policy" "codebuild_policy" {
       "Action": [
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
-        "logs:PutLogEvents"
+        "logs:PutLogEvents",
+        "s3:*"
       ]
     }
   ]

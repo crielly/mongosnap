@@ -10,7 +10,7 @@ resource "aws_codebuild_project" "mongosnap" {
 
   environment {
     compute_type = "BUILD_GENERAL1_SMALL"
-    image        = "2"
+    image        = "aws/codebuild/golang:1.7.3"
     type         = "LINUX_CONTAINER"
   }
 
@@ -21,4 +21,8 @@ resource "aws_codebuild_project" "mongosnap" {
   tags {
     "Environment" = "dev"
   }
+}
+
+output "project-name" {
+  value = "${aws_codebuild_project.mongosnap.name}"
 }
