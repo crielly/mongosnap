@@ -15,7 +15,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Compiling the Go code...
-      - go build -o mongosnap.go 
+      - go build .
   post_build:
     commands:
       - echo Build completed on `date`
