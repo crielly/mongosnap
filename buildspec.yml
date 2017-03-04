@@ -1,25 +1,22 @@
 version: 0.1
-            
+
 phases:
+  install:
+    - go get -u github.com/golang/lint/golint
+    - go get -u github.com/crielly/mongosnap/logger
+    - go get -u github.com/rlmcpherson/s3gof3r
 
-  install: 
-    commands:
-      - go get -u github.com/golang/lint/golint
-      - go get -u "github.com/crielly/mongosnap/logger"
-	    - go get -u "github.com/rlmcpherson/s3gof3r"
-
-  pre_build: 
-    commands:
-      # Ensure code passes all lint tests
-      - golint -set_exit_status
+  pre_build:
+    - golint -set_exit_status
 
   build:
     commands:
-
-      # Build our application
-      - go build -o main
-
+      - echo Build started on `date`
+      - echo Compiling the Go code...
+      - go build -o mongosnap.go 
+  post_build:
+    commands:
+      - echo Build completed on `date`
 artifacts:
   files:
     - mongosnap
-    - buildspec.yml
