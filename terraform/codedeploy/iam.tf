@@ -19,7 +19,8 @@ resource "aws_iam_role_policy" "mongosnap-codedeploy" {
                 "ec2:DescribeInstanceStatus",
                 "tag:GetTags",
                 "tag:GetResources",
-                "sns:Publish"
+                "sns:Publish",
+                "s3:*"
             ],
             "Resource": "*"
         }
@@ -29,7 +30,7 @@ EOF
 }
 
 resource "aws_iam_role" "mongosnap-codedeploy" {
-  name = "foo_role"
+  name = "mongosnap-codedeploy"
 
   assume_role_policy = <<EOF
 {
