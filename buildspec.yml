@@ -1,0 +1,25 @@
+version: 0.1
+
+phases:
+  install:
+    commands:
+      - go get -u github.com/golang/lint/golint
+      - go get -u github.com/crielly/mongosnap/logger
+      - go get -u github.com/rlmcpherson/s3gof3r
+      - go get -u github.com/docopt/docopt-go
+
+  pre_build:
+    commands:
+      - golint -set_exit_status
+
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Compiling the Go code...
+      - go build -o mongosnap
+  post_build:
+    commands:
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - mongosnap
