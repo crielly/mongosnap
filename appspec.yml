@@ -1,5 +1,5 @@
 version: 0.0
 os: linux
 files:
-  - source: mongosnap-build
-    destination: /tmp 
+  - source: mongosnap
+    destination: /usr/local/bin
