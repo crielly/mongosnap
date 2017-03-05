@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "mongosnap" {
-  bucket = "${var.mongosnap-artifact-bucket}"
+  bucket = "${var.artifact-bucket}"
 
   tags {
     Name = "mongosnap"

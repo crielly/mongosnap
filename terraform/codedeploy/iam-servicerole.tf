@@ -1,6 +1,6 @@
-resource "aws_iam_role_policy" "mongosnap-codedeploy" {
-  name = "mongosnap-codedeploy"
-  role = "${aws_iam_role.mongosnap-codedeploy.id}"
+resource "aws_iam_role_policy" "codedeploy-policy" {
+  name = "codedeploy-policy"
+  role = "${aws_iam_role.codedeploy-role.id}"
 
   policy = <<EOF
 {
@@ -20,7 +20,8 @@ resource "aws_iam_role_policy" "mongosnap-codedeploy" {
                 "tag:GetTags",
                 "tag:GetResources",
                 "sns:Publish",
-                "s3:*"
+                "s3:GetObject",
+                "s3:ListObject"
             ],
             "Resource": "*"
         }
@@ -29,8 +30,8 @@ resource "aws_iam_role_policy" "mongosnap-codedeploy" {
 EOF
 }
 
-resource "aws_iam_role" "mongosnap-codedeploy" {
-  name = "mongosnap-codedeploy"
+resource "aws_iam_role" "codedeploy-role" {
+  name = "codedeploy-role"
 
   assume_role_policy = <<EOF
 {

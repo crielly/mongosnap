@@ -5,7 +5,7 @@ resource "aws_codedeploy_app" "mongosnap" {
 resource "aws_codedeploy_deployment_group" "mongosnap-dev" {
   app_name               = "${aws_codedeploy_app.mongosnap.name}"
   deployment_group_name  = "mongosnap-dev"
-  service_role_arn       = "${aws_iam_role.mongosnap-codedeploy.arn}"
+  service_role_arn       = "${aws_iam_role.codedeploy-role.arn}"
   deployment_config_name = "CodeDeployDefault.OneAtATime"
 
   ec2_tag_filter {

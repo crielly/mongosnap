@@ -1,14 +1,16 @@
 provider "aws" {
-  profile = "tastycidr"
+  profile = "${var.aws-credentials-profile}"
 }
 
 variable "region" {
   default = "us-east-1"
 }
 
-variable "mongosnap-artifact-bucket" {}
+variable "aws-credentials-profile" {}
 
-variable "codedeploy-slack-endpoint" {}
+variable "artifact-bucket" {}
+
+variable "state-bucket" {}
 
 variable "github-oauth-token" {}
 
@@ -16,9 +18,9 @@ data "terraform_remote_state" "codebuild" {
   backend = "s3"
 
   config {
-    bucket  = "mongosnap-tfstate"
+    bucket  = "${var.state-bucket}"
     key     = "dev/codebuild.tfstate"
-    profile = "tastycidr"
+    profile = "${var.aws-credentials-profile}"
   }
 }
 
@@ -26,9 +28,9 @@ data "terraform_remote_state" "codedeploy" {
   backend = "s3"
 
   config {
-    bucket  = "mongosnap-tfstate"
+    bucket  = "${var.state-bucket}"
     key     = "dev/codedeploy.tfstate"
-    profile = "tastycidr"
+    profile = "${var.aws-credentials-profile}"
   }
 }
 
@@ -36,8 +38,8 @@ data "terraform_remote_state" "codepipeline" {
   backend = "s3"
 
   config {
-    bucket  = "mongosnap-tfstate"
+    bucket  = "${var.state-bucket}"
     key     = "dev/codepipeline.tfstate"
-    profile = "tastycidr"
+    profile = "${var.aws-credentials-profile}"
   }
 }
