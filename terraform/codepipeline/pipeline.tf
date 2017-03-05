@@ -19,7 +19,7 @@ resource "aws_codepipeline" "mongosnap" {
       output_artifacts = ["mongosnap-source"]
 
       configuration {
-        OAuthToken = "08c05b4213ee6e22f6ce50b7ad0b7e3baae003eb"
+        OAuthToken = "${var.github-oauth-token}"
         Owner      = "crielly"
         Repo       = "mongosnap"
         Branch     = "master"
