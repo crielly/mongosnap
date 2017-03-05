@@ -10,6 +10,8 @@ variable "mongosnap-artifact-bucket" {}
 
 variable "codedeploy-slack-endpoint" {}
 
+variable "github-oauth-token" {}
+
 data "terraform_remote_state" "codebuild" {
   backend = "s3"
 
