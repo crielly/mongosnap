@@ -1,0 +1,17 @@
+{
+	"ImportPath": "github.com/crielly/mongosnap",
+	"GoVersion": "go1.7",
+	"GodepVersion": "v79",
+	"Deps": [
+		{
+			"ImportPath": "github.com/docopt/docopt-go",
+			"Comment": "0.6.2",
+			"Rev": "784ddc588536785e7299f7272f39101f7faccc3f"
+		},
+		{
+			"ImportPath": "github.com/rlmcpherson/s3gof3r",
+			"Comment": "v0.5.0-29-g864ae0b",
+			"Rev": "864ae0bf7cf2e20c0002b7ea17f4d84fec1abc14"
+		}
+	]
+}
