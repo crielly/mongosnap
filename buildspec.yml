@@ -1,6 +1,9 @@
 version: 0.1
 
 phases:
+  install: 
+    commands:
+      - go get -u github.com/golang/lint/golint
 
   pre_build:
     commands:
