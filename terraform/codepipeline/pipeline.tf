@@ -11,7 +11,7 @@ resource "aws_codepipeline" "mongosnap" {
     name = "Source"
 
     action {
-      name             = "Source"
+      name             = "github-checkout"
       category         = "Source"
       owner            = "ThirdParty"
       provider         = "GitHub"
@@ -31,7 +31,7 @@ resource "aws_codepipeline" "mongosnap" {
     name = "Build"
 
     action {
-      name             = "Build"
+      name             = "mongosnap-compile"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
@@ -49,7 +49,7 @@ resource "aws_codepipeline" "mongosnap" {
     name = "Deploy"
 
     action {
-      name            = "Deploy"
+      name            = "binary-deploy"
       category        = "Deploy"
       owner           = "AWS"
       provider        = "CodeDeploy"
