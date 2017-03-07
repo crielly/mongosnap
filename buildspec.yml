@@ -5,6 +5,8 @@ phases:
     commands:
       - go get -u github.com/golang/lint/golint
       - go get -u github.com/crielly/mongosnap/logger
+      - go get -u github.com/rlmcpherson/s3gof3r
+      - go get -u github.com/docopt/docopt-go
 
   pre_build:
     commands:
