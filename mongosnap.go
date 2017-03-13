@@ -38,6 +38,6 @@ Options:
 
 	// lvmsnap.LvmSnap(size, name, path)
 
-	s3upload.S3upload(filepath, bucket, object)
+	s3upload.Zip(filepath, bucket, object)
 
 }

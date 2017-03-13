@@ -1,16 +1,16 @@
 package s3upload
 
 import (
-	"compress/gzip"
-	"io"
-	"os"
+	"log"
 
 	"github.com/crielly/mongosnap/logger"
+	zipTool "github.com/pierrre/archivefile/zip"
 	"github.com/rlmcpherson/s3gof3r"
 )
 
-// S3upload streams compressed output to S3
-func S3upload(toarchive, s3bucket, object string) {
+// Zip archives a file or directory
+func Zip(dir, s3bucket, object string) error {
+
 	keys, err := s3gof3r.EnvKeys()
 	logger.LogError(err)
 
@@ -23,17 +23,9 @@ func S3upload(toarchive, s3bucket, object string) {
 	logger.LogError(err)
 	defer s3writer.Close()
 
-	// Open a compressed writer to handle gzip and pass it to S3 writer
-	zipwriter := gzip.NewWriter(s3writer)
-	defer zipwriter.Close()
+	progress := func(archivePath string) {
+		log.Println(archivePath)
+	}
 
-	// Open files we want archived
-	file, err := os.Open(toarchive)
-	logger.LogError(err)
-	defer file.Close()
-
-	// Pass opened file to compression writer
-	_, err = io.Copy(zipwriter, file)
-	logger.LogError(err)
-
+	return zipTool.Archive(dir, s3writer, progress)
 }
