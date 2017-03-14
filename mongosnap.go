@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/crielly/mongosnap/logger"
+	"github.com/crielly/mongosnap/readconfig"
 	"github.com/crielly/mongosnap/s3upload"
 	"github.com/docopt/docopt-go"
 )
@@ -39,5 +40,6 @@ Options:
 	// lvmsnap.LvmSnap(size, name, path)
 
 	s3upload.Zip(filepath, bucket, object)
+	readconfig.ReadConfig()
 
 }
