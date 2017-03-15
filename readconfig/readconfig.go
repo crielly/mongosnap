@@ -1,7 +1,7 @@
 package readconfig
 
 import (
-	"fmt"
+	"io/ioutil"
 
 	"github.com/crielly/mongosnap/logger"
 	"github.com/ghodss/yaml"
@@ -9,19 +9,18 @@ import (
 
 // ReplicaConfig describes the configuration of a MongoD process
 type ReplicaConfig struct {
-	Name      string `json:"name"`
-	Port      int    `json:"port"`
-	Directory string `json:"directory"`
+	Replica string            `json:"replica"`
+	Conf    map[string]string `json:"conf"`
 }
 
 // ReadConfig prints a test MongoD Replica Config
-func ReadConfig() {
-	b2b := ReplicaConfig{"b2bReplica", 27017, "/data/db00"}
-	y, err := yaml.Marshal(b2b)
-	if err != nil {
-		logger.LogError(err)
+func ReadConfig(configPath string) (replconf ReplicaConfig, err error) {
 
-		fmt.Println(string(y))
+	y, err := ioutil.ReadFile(configPath)
+	logger.LogError(err)
 
-	}
+	err = yaml.Unmarshal(y, &replconf)
+	logger.LogError(err)
+
+	return
 }
