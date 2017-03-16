@@ -7,6 +7,7 @@ phases:
       - go get -u github.com/crielly/mongosnap/logger
       - go get -u github.com/rlmcpherson/s3gof3r
       - go get -u github.com/docopt/docopt-go
+      - go get -u github.com/ghodss/yaml
 
   pre_build:
     commands:
