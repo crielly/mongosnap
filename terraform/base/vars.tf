@@ -19,7 +19,7 @@ data "terraform_remote_state" "codebuild" {
 
   config {
     bucket  = "${var.state-bucket}"
-    key     = "dev/codebuild.tfstate"
+    key     = "backend/codebuild.tfstate"
     profile = "${var.aws-credentials-profile}"
   }
 }
@@ -29,7 +29,7 @@ data "terraform_remote_state" "codedeploy" {
 
   config {
     bucket  = "${var.state-bucket}"
-    key     = "dev/codedeploy.tfstate"
+    key     = "backend/codedeploy.tfstate"
     profile = "${var.aws-credentials-profile}"
   }
 }
@@ -39,7 +39,7 @@ data "terraform_remote_state" "codepipeline" {
 
   config {
     bucket  = "${var.state-bucket}"
-    key     = "dev/codepipeline.tfstate"
+    key     = "backend/codepipeline.tfstate"
     profile = "${var.aws-credentials-profile}"
   }
 }
