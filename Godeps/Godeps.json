@@ -9,9 +9,12 @@
 			"Rev": "784ddc588536785e7299f7272f39101f7faccc3f"
 		},
 		{
-			"ImportPath": "github.com/rlmcpherson/s3gof3r",
-			"Comment": "v0.5.0-29-g864ae0b",
-			"Rev": "864ae0bf7cf2e20c0002b7ea17f4d84fec1abc14"
+			"ImportPath": "github.com/ghodss/yaml",
+			"Rev": "04f313413ffd65ce25f2541bfd2b2ceec5c0908c"
+		},
+		{
+			"ImportPath": "gopkg.in/yaml.v2",
+			"Rev": "a3f3340b5840cee44f372bddb5880fcbc419b46a"
 		}
 	]
 }
