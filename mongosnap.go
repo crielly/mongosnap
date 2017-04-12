@@ -1,51 +1,66 @@
+// Mongosnap is used for backing up a MongoDB cluster via volume snapshots.
+// It supports LVM and ZFS snapshots to achieve a consistent state backup
+// of a MongoDB cluster of any size or sharding configuration
+// It is designed to then stream the snapshot directly into S3
+// without ever writing the data to disk, ensuring that even a large
+// and very full cluster can be backed up without using additional disk resources.
+
 package main
 
 import (
+	"log"
+	"github.com/mitchellh/cli"
+	"os"
+	"github.com/crielly/mongosnap/command"
 	"fmt"
-	"time"
-
-	"github.com/crielly/mongosnap/logger"
-	"github.com/crielly/mongosnap/readconfig"
-	"github.com/docopt/docopt-go"
 )
-
 func main() {
-	usage := `mongosnap
+	// Call realMain instead of doing the work here so we can use
+	// `defer` statements within the function and have them work properly.
+	// (defers aren't called with os.Exit)
+	os.Exit(realMain())
+}
 
-Usage:
-	mongosnap --snapname=<snapname> --snapsize=<snapsize> --snappath=<snappath> --filepath=<filepath> --bucket=<bucket> --object=<object> --configpath=<configpath>
+func realMain() int {
 
-Options:
-	-h --help		Show usage information
-	-n --snapname	Snapshot name
-	-s --snapsize	Size of the snapshot
-	-p --snappath	Path to snap
-	-f --filepath	File to archive
-	-b --bucket		S3 bucket
-	-o --object		S3 object path
-	-c --configpath Path to yaml config
-`
-	arguments, err := docopt.Parse(usage, nil, true, "", false)
-	logger.LogError(err)
+	ui := &cli.BasicUi{
+		Reader:			os.Stdin,
+		Writer:			os.Stdout,
+		ErrorWriter: 	os.Stderr,
+	}
 
-	snapsize := arguments["--snapsize"].(string)
-	snapname := arguments["--snapname"].(string)
-	snappath := arguments["--snappath"].(string)
-	filepath := arguments["--filepath"].(string)
-	bucket := arguments["--bucket"].(string)
-	object := arguments["--object"].(string)
-	configpath := arguments["--configpath"].(string)
+	c := cli.NewCLI("mongosnap", "0.0.1")
 
-	t := time.Now().UTC().Format("20060102150405")
-	fmt.Println(t)
-	fmt.Println(snapsize, snapname, snappath)
-	fmt.Println(filepath, bucket, object)
+	c.Args = os.Args[1:]
 
-	// lvmsnap.LvmSnap(size, name, path)
+	c.Commands = map[string]cli.CommandFactory{
+		"backup": func() (cli.Command, error) {
+			return &command.Backup{
+				UI: &cli.ColoredUi{
+					Ui:	ui,
+					OutputColor: cli.UiColorBlue,
+				},
+			}, nil
+		},
+		"restore": func() (cli.Command, error) {
+			return &command.Restore{
+				UI: &cli.ColoredUi{
+					Ui:	ui,
+					OutputColor: cli.UiColorYellow,
+				},
+			}, nil
+		},
+	}
+	fmt.Println("Print some Args: ", c.Args)
 
-	// s3upload.Zip(filepath, bucket, object)
-	yamlconf, err := readconfig.ReadConfig(configpath)
+	exitStatus, err := c.Run()
 
-	fmt.Println(yamlconf)
+	if err != nil {
+		log.Println(err)
+		return 1
+	}
+
+	return exitStatus
 
 }
+
