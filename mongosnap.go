@@ -11,9 +11,12 @@ import (
 	"log"
 	"github.com/mitchellh/cli"
 	"os"
+	"io/ioutil"
 	"github.com/crielly/mongosnap/command"
+	"github.com/crielly/mongosnap/logger"
 	"fmt"
 )
+
 func main() {
 	// Call realMain instead of doing the work here so we can use
 	// `defer` statements within the function and have them work properly.
@@ -22,6 +25,8 @@ func main() {
 }
 
 func realMain() int {
+
+	logger.Init(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr)
 
 	ui := &cli.BasicUi{
 		Reader:			os.Stdin,

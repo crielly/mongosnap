@@ -17,10 +17,10 @@ type ReplicaConfig struct {
 func ReadConfig(configPath string) (replconf ReplicaConfig, err error) {
 
 	y, err := ioutil.ReadFile(configPath)
-	logger.LogError(err)
+	logger.Error.Println(err)
 
 	err = yaml.Unmarshal(y, &replconf)
-	logger.LogError(err)
+	logger.Error.Println(err)
 
 	return
 }

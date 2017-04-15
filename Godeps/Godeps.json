@@ -4,17 +4,34 @@
 	"GodepVersion": "v79",
 	"Deps": [
 		{
-			"ImportPath": "github.com/docopt/docopt-go",
-			"Comment": "0.6.2",
-			"Rev": "784ddc588536785e7299f7272f39101f7faccc3f"
+			"ImportPath": "github.com/armon/go-radix",
+			"Rev": "4239b77079c7b5d1243b7b4736304ce8ddb6f0f2"
 		},
 		{
-			"ImportPath": "github.com/ghodss/yaml",
-			"Rev": "04f313413ffd65ce25f2541bfd2b2ceec5c0908c"
+			"ImportPath": "github.com/bgentry/speakeasy",
+			"Rev": "675b82c74c0ed12283ee81ba8a534c8982c07b85"
 		},
 		{
-			"ImportPath": "gopkg.in/yaml.v2",
-			"Rev": "a3f3340b5840cee44f372bddb5880fcbc419b46a"
+			"ImportPath": "github.com/mattn/go-isatty",
+			"Comment": "v0.0.1-32-gfc9e8d8",
+			"Rev": "fc9e8d8ef48496124e79ae0df75490096eccf6fe"
+		},
+		{
+			"ImportPath": "github.com/mitchellh/cli",
+			"Rev": "8d6d9ab3c912dcb005ece87c40a41b9e73e1999a"
+		},
+		{
+			"ImportPath": "github.com/pierrre/archivefile/zip",
+			"Rev": "e2d100bc74f58ed7d2f41175cd2cf5fe29446399"
+		},
+		{
+			"ImportPath": "github.com/rlmcpherson/s3gof3r",
+			"Comment": "v0.5.0-29-g864ae0b",
+			"Rev": "864ae0bf7cf2e20c0002b7ea17f4d84fec1abc14"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "f3918c30c5c2cb527c0b071a27c35120a6c0719a"
 		}
 	]
 }
