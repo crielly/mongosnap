@@ -8,6 +8,8 @@ phases:
       - go get -u github.com/ghodss/yaml
       - go get -u github.com/mitchellh/cli
       - go get -u github.com/pierrre/archivefile/zip
+      - go get -u github.com/crielly/mongosnap/logger
+      - go get -u github.com/crielly/mongosnap/command
 
   pre_build:
     commands:
