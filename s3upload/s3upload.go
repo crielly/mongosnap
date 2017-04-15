@@ -12,7 +12,9 @@ import (
 func Zip(dir, s3bucket, object string) error {
 
 	keys, err := s3gof3r.EnvKeys()
-	logger.LogError(err)
+	if err != nil {
+		logger.Error.Println(err)
+	}
 
 	// Open bucket we want to write a file to
 	s3 := s3gof3r.New("", keys)
@@ -20,11 +22,13 @@ func Zip(dir, s3bucket, object string) error {
 
 	// open a PutWriter for S3 upload
 	s3writer, err := bucket.PutWriter(object, nil, nil)
-	logger.LogError(err)
+	if err != nil {
+		logger.Error.Println(err)
+	}
 	defer s3writer.Close()
 
 	progress := func(archivePath string) {
-		log.Println(archivePath)
+		logger.Info.Println(archivePath)
 	}
 
 	return zipTool.Archive(dir, s3writer, progress)
