@@ -5,9 +5,9 @@ phases:
     commands:
       - go get -u github.com/golang/lint/golint
       - go get -u github.com/rlmcpherson/s3gof3r
-      - go get -u github.com/docopt/docopt-go
       - go get -u github.com/ghodss/yaml
       - go get -u github.com/mitchellh/cli
+      - go get -u github.com/pierrre/archivefile/zip
 
   pre_build:
     commands:
