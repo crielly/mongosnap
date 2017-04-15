@@ -1,8 +1,6 @@
 package s3upload
 
 import (
-	"log"
-
 	"github.com/crielly/mongosnap/logger"
 	zipTool "github.com/pierrre/archivefile/zip"
 	"github.com/rlmcpherson/s3gof3r"
