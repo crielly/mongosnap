@@ -51,7 +51,7 @@ func (b *Backup) Run(args []string) int {
 
 	s3upload.Zip(b.MountPath, b.S3bucket, b.S3object)
 
-	lvm.LvmCleanup(fmt.Sprintf("%s%s", b.Volgrp, b.Lvol), b.MountPath)
+	lvm.LvmCleanup(fmt.Sprintf("%s%s", b.Volgrp, b.Name), b.MountPath)
 
 	return 0
 }
