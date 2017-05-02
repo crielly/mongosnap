@@ -6,6 +6,7 @@ import (
 	"os"
 	"github.com/crielly/mongosnap/logger"
 	"log"
+	"syscall"
 )
 
 // TakeSnap triggers an LVM snapshot
@@ -47,4 +48,26 @@ func MountLvmSnap(snappath, mountpath, fstype, opts string) {
 		logger.Info.Printf("Mounted snapshot %s at path %s using opt string %s", snappath, mountpath, opts)
 	}
 	
+}
+
+// LvmCleanup
+func LvmCleanup(snappath, mountdir string) {
+
+	err := syscall.Unmount(mountdir, 0)
+	if err != nil {
+		logger.Error.Println(err)
+	}
+
+	removesnapcmd := fmt.Sprintf("lvremove -f %s", snappath)
+	logger.Info.Println(removesnapcmd)
+	run := exec.Command("bash", "-c", removesnapcmd)
+	_, err = run.CombinedOutput()
+	if err != nil {
+		logger.Error.Println(err)
+	}
+
+	err = os.RemoveAll(mountdir)
+	if err != nil {
+		logger.Error.Println(err)
+	}
 }
