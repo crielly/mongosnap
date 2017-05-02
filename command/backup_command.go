@@ -4,22 +4,16 @@ import (
 	"github.com/mitchellh/cli"
 	"fmt"
 	"flag"
-	"github.com/crielly/mongosnap/lvm"
-	"github.com/crielly/mongosnap/s3upload"
-	"log"
+	"github.com/crielly/mongosnap/backconfig"
+	"github.com/crielly/mongosnap/logger"
 )
+	// "github.com/crielly/mongosnap/replconfig"
+	// "github.com/crielly/mongosnap/lvm"
+	// "github.com/crielly/mongosnap/s3upload"
 
 // Backup command performs a Mongo backup
 type Backup struct {
-	Volgrp string
-	Lvol string
-	MountPath string
-	Filesystem string
-	Opts string
-	Size string
-	Name string
-	S3bucket string
-	S3object string
+	BackConfYamlPath string
 	UI cli.Ui
 }
 
@@ -31,27 +25,29 @@ func (b *Backup) Run(args []string) int {
 		b.UI.Output(b.Help()) 
 	}
 
-	cmdFlags.StringVar(&b.Volgrp, "vg", "/dev/ephem_vg/", "Path to volume group")
-	cmdFlags.StringVar(&b.Lvol, "lvol", "ephem_lv", "The Mongo Data Directory to backup")
-	cmdFlags.StringVar(&b.MountPath, "mountpath", "/backup", "dir to mount snap to and backup from")
-	cmdFlags.StringVar(&b.Filesystem, "fs", "xfs", "Filesystem the snapshotted lvol is using")
-	cmdFlags.StringVar(&b.Opts, "opts", "", "mount opts")
-	cmdFlags.StringVar(&b.Name, "name", "mongobackup", "Name to give the snapshot")
-	cmdFlags.StringVar(&b.Size, "size", "1024", "Size of the snapshot")
-	cmdFlags.StringVar(&b.S3bucket, "s3bucket", "gazaro-operations", "S3 bucket in which to store backup")
-	cmdFlags.StringVar(&b.S3object, "s3object", "mongo-backups/mongosnap/backup", "Path within S3 Bucket")
+	cmdFlags.StringVar(&b.BackConfYamlPath, "confpath", "./backconfig/mongosnap.yml", "Path to YAML MongoSnap config")
 
 	if err := cmdFlags.Parse(args); err != nil {
-		log.Fatal(err)
+		logger.Error.Println(err)
 	}
 
-	lvm.TakeSnap(b.Size, b.Name, fmt.Sprintf("%s%s", b.Volgrp, b.Lvol))
+	backconf, err := backconfig.BackConfig(b.BackConfYamlPath)
+
+	if err != nil {
+		logger.Error.Println(err)
+	}
+
+	for i, v := range backconf.Cluster.ReplicaConfs {
+		fmt.Printf("Index %d, value %s\n", i,v)
+	}
+
+	// lvm.TakeSnap(conf.ClusSize, b.Name, fmt.Sprintf("%s%s", b.Volgrp, b.Lvol))
 	
-	lvm.MountLvmSnap(fmt.Sprintf("%s%s", b.Volgrp, b.Name), b.MountPath, b.Filesystem, b.Opts)
+	// lvm.MountLvmSnap(fmt.Sprintf("%s%s", b.Volgrp, b.Name), b.MountPath, b.Filesystem, b.Opts)
 
-	s3upload.Zip(b.MountPath, b.S3bucket, b.S3object)
+	// s3upload.Zip(b.MountPath, b.S3bucket, b.S3object)
 
-	lvm.LvmCleanup(fmt.Sprintf("%s%s", b.Volgrp, b.Name), b.MountPath)
+	// lvm.LvmCleanup(fmt.Sprintf("%s%s", b.Volgrp, b.Name), b.MountPath)
 
 	return 0
 }
