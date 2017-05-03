@@ -44,14 +44,15 @@ func MountLvmSnap(snappath, mountpath, fstype, opts string) {
 
 	if err != nil {
 		logger.Error.Println(err)
+		Cleanup(snappath, mountpath)
 	} else {
 		logger.Info.Printf("Mounted snapshot %s at path %s using opt string %s", snappath, mountpath, opts)
 	}
 	
 }
 
-// LvmCleanup
-func LvmCleanup(snappath, mountdir string) {
+// Cleanup any snapshot at specified dir
+func Cleanup(snappath, mountdir string) {
 
 	err := syscall.Unmount(mountdir, 0)
 	if err != nil {
