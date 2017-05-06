@@ -1,7 +1,7 @@
 ---
 cluster:
   storage:
-    volumeGroup: ephem_vg
+    volumeGroup: /dev/ephem_vg
     logicalVolume: ephem_lv
     fileSystem: xfs
   snapshot:
