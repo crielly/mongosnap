@@ -8,9 +8,10 @@ import (
 	"github.com/crielly/mongosnap/logger"
 	"sync"
 	"github.com/crielly/mongosnap/replconfig"
+	"time"
+	"github.com/crielly/mongosnap/lvm"
+	"github.com/crielly/mongosnap/s3upload"
 )
-	// "github.com/crielly/mongosnap/lvm"
-	// "github.com/crielly/mongosnap/s3upload"
 
 // Backup command performs a Mongo backup
 type Backup struct {
@@ -57,11 +58,11 @@ func (b *Backup) Run(args []string) int {
 	fmt.Println("Snapshot Mount Path: ", mountpath)
 	fmt.Println("Filesystem type: ", fstype)
 	fmt.Println("Mount Options: ", mountopts)
-	// lvm.Cleanup(snappath, mountpath)
+	lvm.Cleanup(snappath, mountpath)
 
-	// lvm.TakeSnap(snapsize, snapname, snappath)
+	lvm.TakeSnap(snapsize, snapname, snappath)
 
-	// lvm.MountLvmSnap(snappath, mountpath, fstype, mountopts)
+	lvm.MountLvmSnap(snappath, mountpath, fstype, mountopts)
 
 	var wg sync.WaitGroup
 	wg.Add(len(backconf.Cluster.ReplicaConfs))
@@ -78,14 +79,16 @@ func (b *Backup) Run(args []string) int {
 
 			dbpath := fmt.Sprintf("%s%s", mountpath, replconf.Storage.DbPath)
 			fmt.Println(dbpath)
+
+			s3obj := fmt.Sprintf("%s_%s", replconf.Storage.DbPath, time.Now().Format("20060102150405"))
 			
-			// s3upload.Zip(dbpath, s3bucket, s3Object)
+			s3upload.Zip(dbpath, s3bucket, s3obj)
 
 		}(v)
 	}
 
 	wg.Wait()
-	// lvm.Cleanup(snappath, mountpath)
+	lvm.Cleanup(snappath, mountpath)
 
 	// s3upload.Zip(b.MountPath, b.S3bucket, b.S3object)
 
