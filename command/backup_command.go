@@ -1,29 +1,31 @@
 package command
 
 import (
-	"github.com/mitchellh/cli"
-	"fmt"
 	"flag"
+	"fmt"
+	"sync"
+	"time"
+
 	"github.com/crielly/mongosnap/backconfig"
 	"github.com/crielly/mongosnap/logger"
-	"sync"
+	"github.com/crielly/mongosnap/lvm"
 	"github.com/crielly/mongosnap/replconfig"
+	"github.com/crielly/mongosnap/s3upload"
+	"github.com/mitchellh/cli"
 )
-	// "github.com/crielly/mongosnap/lvm"
-	// "github.com/crielly/mongosnap/s3upload"
 
 // Backup command performs a Mongo backup
 type Backup struct {
 	BackConfYamlPath string
-	UI cli.Ui
+	UI               cli.Ui
 }
 
 // Run the backup
 func (b *Backup) Run(args []string) int {
 
 	cmdFlags := flag.NewFlagSet("backup", flag.ContinueOnError)
-	cmdFlags.Usage = func() { 
-		b.UI.Output(b.Help()) 
+	cmdFlags.Usage = func() {
+		b.UI.Output(b.Help())
 	}
 
 	cmdFlags.StringVar(&b.BackConfYamlPath, "confpath", "backconfig/mongosnap.yml", "Path to YAML MongoSnap config")
@@ -41,7 +43,7 @@ func (b *Backup) Run(args []string) int {
 	snapsize := backconf.Cluster.Snapshot.Size
 	snapname := backconf.Cluster.Snapshot.SnapshotName
 	volpath := fmt.Sprintf("%s/%s", backconf.Cluster.Storage.VolumeGroup, backconf.Cluster.Storage.LogicalVolume)
-	snappath := fmt.Sprintf("%s/%s", volpath, snapname)
+	snappath := fmt.Sprintf("%s/%s", backconf.Cluster.Storage.VolumeGroup, snapname)
 	mountpath := backconf.Cluster.Snapshot.MountPath
 	s3bucket := backconf.S3.Bucket
 	s3Object := backconf.S3.ObjectPath
@@ -57,11 +59,11 @@ func (b *Backup) Run(args []string) int {
 	fmt.Println("Snapshot Mount Path: ", mountpath)
 	fmt.Println("Filesystem type: ", fstype)
 	fmt.Println("Mount Options: ", mountopts)
-	// lvm.Cleanup(snappath, mountpath)
+	lvm.Cleanup(snappath, mountpath)
 
-	// lvm.TakeSnap(snapsize, snapname, snappath)
+	lvm.TakeSnap(snapsize, snapname, snappath)
 
-	// lvm.MountLvmSnap(snappath, mountpath, fstype, mountopts)
+	lvm.MountLvmSnap(snappath, mountpath, fstype, mountopts)
 
 	var wg sync.WaitGroup
 	wg.Add(len(backconf.Cluster.ReplicaConfs))
@@ -78,18 +80,16 @@ func (b *Backup) Run(args []string) int {
 
 			dbpath := fmt.Sprintf("%s%s", mountpath, replconf.Storage.DbPath)
 			fmt.Println(dbpath)
-			
-			// s3upload.Zip(dbpath, s3bucket, s3Object)
+
+			s3obj := fmt.Sprintf("%s_%s", replconf.Storage.DbPath, time.Now().Format("20060102150405"))
+
+			s3upload.Zip(dbpath, s3bucket, s3obj)
 
 		}(v)
 	}
 
 	wg.Wait()
-	// lvm.Cleanup(snappath, mountpath)
-
-	// s3upload.Zip(b.MountPath, b.S3bucket, b.S3object)
-
-	// lvm.LvmCleanup(fmt.Sprintf("%s%s", b.Volgrp, b.Name), b.MountPath)
+	lvm.Cleanup(snappath, mountpath)
 
 	return 0
 }

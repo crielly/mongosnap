@@ -2,16 +2,17 @@ package lvm
 
 import (
 	"fmt"
-	"os/exec"
-	"os"
-	"github.com/crielly/mongosnap/logger"
 	"log"
+	"os"
+	"os/exec"
 	"syscall"
+
+	"github.com/crielly/mongosnap/logger"
 )
 
 // TakeSnap triggers an LVM snapshot
 func TakeSnap(size, name, path string) {
-	cmd := fmt.Sprintf("lvcreate -L %sM -s -n %s %s", size, name, path)
+	cmd := fmt.Sprintf("lvcreate -l%s -s -n %s %s", size, name, path)
 	fmt.Println(cmd)
 	run := exec.Command("bash", "-c", cmd)
 	_, err := run.CombinedOutput()
@@ -48,7 +49,7 @@ func MountLvmSnap(snappath, mountpath, fstype, opts string) {
 	} else {
 		logger.Info.Printf("Mounted snapshot %s at path %s using opt string %s", snappath, mountpath, opts)
 	}
-	
+
 }
 
 // Cleanup any snapshot at specified dir

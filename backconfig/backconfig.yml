@@ -1,7 +1,7 @@
 ---
 cluster:
   storage:
-    volumeGroup: ephem_vg
+    volumeGroup: /dev/ephem_vg
     logicalVolume: ephem_lv
     fileSystem: xfs
   snapshot:
@@ -10,15 +10,15 @@ cluster:
     snapshotName: mongobackup
     size: 100%FREE
   replicaConfs:
-    - /home/crielly/DEV/mongoconfs/mongodb.conf
-    - /home/crielly/DEV/mongoconfs/mongodb00.conf
-    - /home/crielly/DEV/mongoconfs/mongodb01.conf
-    - /home/crielly/DEV/mongoconfs/mongodb02.conf
-    - /home/crielly/DEV/mongoconfs/mongodb03.conf
-    - /home/crielly/DEV/mongoconfs/mongodb04.conf
-    - /home/crielly/DEV/mongoconfs/mongodb05.conf
-    - /home/crielly/DEV/mongoconfs/mongodb06.conf
-    - /home/crielly/DEV/mongoconfs/mongodb07.conf
+    - /etc/mongodb.conf
+    - /etc/mongodb00.conf
+    - /etc/mongodb01.conf
+    - /etc/mongodb02.conf
+    - /etc/mongodb03.conf
+    - /etc/mongodb04.conf
+    - /etc/mongodb05.conf
+    - /etc/mongodb06.conf
+    - /etc/mongodb07.conf
 
 s3:
   bucket: gazaro-operations
