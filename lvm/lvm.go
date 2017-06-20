@@ -15,10 +15,12 @@ func TakeSnap(size, name, path string) {
 	cmd := fmt.Sprintf("lvcreate -l%s -s -n %s %s", size, name, path)
 	fmt.Println(cmd)
 	run := exec.Command("bash", "-c", cmd)
-	_, err := run.CombinedOutput()
+	output, err := run.CombinedOutput()
+
+	logger.Info.Println(output)
 
 	if err != nil {
-		log.Fatal(err)
+		logger.Error.Println(err)
 	}
 }
 
@@ -35,7 +37,7 @@ func makeDir(path string, mode os.FileMode) {
 func MountLvmSnap(snappath, mountpath, fstype, opts string) {
 	makeDir(mountpath, 0644)
 
-	cmd := fmt.Sprintf("mount -t %s %s %s %s", fstype, snappath, mountpath, opts)
+	cmd := fmt.Sprintf("mount %s %s %s", snappath, mountpath, opts)
 
 	logger.Info.Println(cmd)
 

@@ -16,6 +16,9 @@ type Config struct {
 	Storage struct {
 		DbPath string `json:"dbPath"`
 	} `json:"storage"`
+	Replication struct {
+		ReplSetName string `json:"replSetName"`
+	} `json:"replication"`
 }
 
 // ReplConfig prints a test MongoD Replica Config
