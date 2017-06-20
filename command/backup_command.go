@@ -63,6 +63,7 @@ func (b *Backup) Run(args []string) int {
 
 	lvm.TakeSnap(snapsize, snapname, volpath)
 
+
 	lvm.MountLvmSnap(snappath, mountpath, fstype, mountopts)
 
 	var wg sync.WaitGroup
@@ -82,6 +83,7 @@ func (b *Backup) Run(args []string) int {
 			fmt.Println(dbpath)
 
 			s3obj := fmt.Sprintf("%s/%s/%s", s3Object, replconf.Replication.ReplSetName, time.Now().Format("20060102150405"))
+
 
 			s3upload.Zip(dbpath, s3bucket, s3obj)
 

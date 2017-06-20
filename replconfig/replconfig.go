@@ -10,7 +10,7 @@ import (
 // Config describes the configuration of a MongoD process
 type Config struct {
 	Net struct {
-		Port int `json:"port"`
+		Port   int    `json:"port"`
 		BindIP string `json:"bindIp"`
 	} `json:"net"`
 	Storage struct {
@@ -21,7 +21,7 @@ type Config struct {
 	} `json:"replication"`
 }
 
-// ReplConfig prints a test MongoD Replica Config
+// ReplConfig unmarshals the Yaml from a mongodb.conf file
 func ReplConfig(configPath string) (replconf Config, err error) {
 
 	y, err := ioutil.ReadFile(configPath)
