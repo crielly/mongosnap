@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/crielly/mongosnap/backconfig"
+	"github.com/crielly/mongosnap/backupconfig"
 	"github.com/crielly/mongosnap/logger"
 	"github.com/crielly/mongosnap/lvm"
 	"github.com/crielly/mongosnap/replconfig"
@@ -28,13 +28,13 @@ func (b *Backup) Run(args []string) int {
 		b.UI.Output(b.Help())
 	}
 
-	cmdFlags.StringVar(&b.BackConfYamlPath, "confpath", "backconfig/mongosnap.yml", "Path to YAML MongoSnap config")
+	cmdFlags.StringVar(&b.BackConfYamlPath, "confpath", "backupconfig/backupconfig.yml", "Path to YAML MongoSnap config")
 
 	if err := cmdFlags.Parse(args); err != nil {
 		logger.Error.Println(err)
 	}
 
-	backconf, err := backconfig.BackConfig(b.BackConfYamlPath)
+	backconf, err := backupconfig.BackupConfig(b.BackConfYamlPath)
 
 	if err != nil {
 		logger.Error.Println(err)

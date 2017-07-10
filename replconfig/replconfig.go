@@ -7,7 +7,8 @@ import (
 	"github.com/ghodss/yaml"
 )
 
-// Config describes the configuration of a MongoD process
+// Config struct describes the values we consider relevant for parsing
+// out of a yaml mongodb conf file
 type Config struct {
 	Net struct {
 		Port   int    `json:"port"`
@@ -21,7 +22,8 @@ type Config struct {
 	} `json:"replication"`
 }
 
-// ReplConfig unmarshals the Yaml from a mongodb.conf file
+// ReplConfig unmarshals the Yaml from a mongodb.conf file and makes it available
+// for use in a Config struct
 func ReplConfig(configPath string) (replconf Config, err error) {
 
 	y, err := ioutil.ReadFile(configPath)
