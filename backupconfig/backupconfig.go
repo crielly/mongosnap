@@ -1,4 +1,4 @@
-package backconfig
+package backupconfig
 
 import (
 	"io/ioutil"
@@ -7,7 +7,8 @@ import (
 	"github.com/ghodss/yaml"
 )
 
-// Config describes the configuration of a MongoD process
+// Config describes the configuration of a MongoD host and the attributes
+// necessary for performing an LVM snapshot and subsequent backup
 type Config struct {
 	Cluster struct {
 
@@ -34,8 +35,10 @@ type Config struct {
 	} `json:"s3"`
 }
 
-// BackConfig prints a test MongoD Replica Config
-func BackConfig(configPath string) (replconf Config, err error) {
+// BackupConfig converts a yaml config describing  a MongoD Host's storage
+// configuration and replica set(s) and makes it available as a struct
+// for the purpose of running a backup against its various replsets 
+func BackupConfig(configPath string) (replconf Config, err error) {
 
 	y, err := ioutil.ReadFile(configPath)
 	if err != nil {

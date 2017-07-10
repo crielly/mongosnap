@@ -10,17 +10,11 @@ cluster:
     snapshotName: mongobackup
     size: 100%FREE
   replicaConfs:
-    - /etc/mongodb.conf
     - /etc/mongodb00.conf
     - /etc/mongodb01.conf
     - /etc/mongodb02.conf
-    - /etc/mongodb03.conf
-    - /etc/mongodb04.conf
-    - /etc/mongodb05.conf
-    - /etc/mongodb06.conf
-    - /etc/mongodb07.conf
 
 s3:
-  bucket: gazaro-operations
+  bucket: mongo-db-backups
   objectPath: mongo-db-backups-test
 
