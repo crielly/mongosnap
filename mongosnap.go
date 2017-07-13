@@ -14,7 +14,6 @@ import (
 	"io/ioutil"
 	"github.com/crielly/mongosnap/command"
 	"github.com/crielly/mongosnap/logger"
-	"fmt"
 )
 
 func main() {
@@ -56,7 +55,7 @@ func realMain() int {
 			}, nil
 		},
 	}
-	fmt.Println("Print some Args: ", c.Args)
+	logger.Info.Printf("Executing Mongosnap with the following args: %s", c.Args)
 
 	exitStatus, err := c.Run()
 

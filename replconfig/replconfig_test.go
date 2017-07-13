@@ -28,7 +28,9 @@ func TestReplStorageConfig(t *testing.T) {
 	}
 
 	if replconf.Storage.DbPath != "/data/db00" {
-		t.Errorf("Incorrect DBPath - expected /data/db00, got %s", replconf.Storage.DbPath)
+		t.Errorf("Incorrect DBPath - expected /data/db00, got %s",
+			replconf.Storage.DbPath,
+		)
 	}
 
 }
@@ -41,7 +43,9 @@ func TestReplReplicationConfig(t *testing.T) {
 	}
 
 	if replconf.Replication.ReplSetName != "prodreplica08" {
-		t.Errorf("Incorrect ReplSetName - expected prodreplica08, got %s", replconf.Replication.ReplSetName)
+		t.Errorf("Incorrect ReplSetName - expected prodreplica08, got %s",
+			replconf.Replication.ReplSetName,
+		)
 	}
 
 }

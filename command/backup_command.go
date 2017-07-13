@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 	"time"
-
+	"os"
 	"github.com/crielly/mongosnap/backupconfig"
 	"github.com/crielly/mongosnap/logger"
 	"github.com/crielly/mongosnap/lvm"
@@ -28,7 +28,11 @@ func (b *Backup) Run(args []string) int {
 		b.UI.Output(b.Help())
 	}
 
-	cmdFlags.StringVar(&b.BackConfYamlPath, "confpath", "backupconfig/backupconfig.yml", "Path to YAML MongoSnap config")
+	cmdFlags.StringVar(&b.BackConfYamlPath,
+		"confpath",
+		"backupconfig/backupconfig.yml",
+		"Path to YAML MongoSnap config",
+	)
 
 	if err := cmdFlags.Parse(args); err != nil {
 		logger.Error.Println(err)
@@ -38,33 +42,36 @@ func (b *Backup) Run(args []string) int {
 
 	if err != nil {
 		logger.Error.Println(err)
+		os.Exit(1)
 	}
 
-	snapsize := backconf.Cluster.Snapshot.Size
-	snapname := backconf.Cluster.Snapshot.SnapshotName
-	volpath := fmt.Sprintf("%s/%s", backconf.Cluster.Storage.VolumeGroup, backconf.Cluster.Storage.LogicalVolume)
-	snappath := fmt.Sprintf("%s/%s", backconf.Cluster.Storage.VolumeGroup, snapname)
-	mountpath := backconf.Cluster.Snapshot.MountPath
-	s3bucket := backconf.S3.Bucket
-	s3Object := backconf.S3.ObjectPath
-	fstype := backconf.Cluster.Storage.FileSystem
-	mountopts := backconf.Cluster.Snapshot.Opts
+	volpath := fmt.Sprintf("%s/%s",
+		backconf.Cluster.Storage.VolumeGroup,
+		backconf.Cluster.Storage.LogicalVolume,
+	)
 
-	fmt.Println("S3 Bucket: ", s3bucket)
-	fmt.Println("S3 Path: ", s3Object)
-	fmt.Println("Snapshot Name: ", snapname)
-	fmt.Println("Snapshot Size: ", snapsize)
-	fmt.Println("Volume Path to Snapshot: ", volpath)
-	fmt.Println("Snapshot Path: ", snappath)
-	fmt.Println("Snapshot Mount Path: ", mountpath)
-	fmt.Println("Filesystem type: ", fstype)
-	fmt.Println("Mount Options: ", mountopts)
-	lvm.Cleanup(snappath, mountpath)
+	snappath := fmt.Sprintf("%s/%s",
+		backconf.Cluster.Storage.VolumeGroup,
+		backconf.Cluster.Snapshot.SnapshotName,
+	)
 
-	lvm.TakeSnap(snapsize, snapname, volpath)
+	logger.Info.Printf("Logical Volume Path: %s", volpath)
+	logger.Info.Printf("LVM Snapshot path: %s", snappath)
 
+	lvm.Cleanup(snappath,
+		backconf.Cluster.Snapshot.MountPath,
+	)
 
-	lvm.MountLvmSnap(snappath, mountpath, fstype, mountopts)
+	lvm.TakeSnap(backconf.Cluster.Snapshot.Size,
+		backconf.Cluster.Snapshot.SnapshotName,
+		volpath,
+	)
+
+	lvm.MountLvmSnap(snappath,
+		backconf.Cluster.Snapshot.MountPath,
+		backconf.Cluster.Storage.FileSystem,
+		backconf.Cluster.Snapshot.Opts,
+	)
 
 	var wg sync.WaitGroup
 	wg.Add(len(backconf.Cluster.ReplicaConfs))
@@ -75,23 +82,30 @@ func (b *Backup) Run(args []string) int {
 
 			replconf, err := replconfig.ReplConfig(v)
 
+			fmt.Println(replconf)
+
 			if err != nil {
 				logger.Error.Println(err)
 			}
 
-			dbpath := fmt.Sprintf("%s%s", mountpath, replconf.Storage.DbPath)
-			fmt.Println(dbpath)
+			dbpath := fmt.Sprintf("%s%s",
+				backconf.Cluster.Snapshot.MountPath,
+				replconf.Storage.DbPath,
+			)
 
-			s3obj := fmt.Sprintf("%s/%s/%s", s3Object, replconf.Replication.ReplSetName, time.Now().Format("20060102150405"))
+			s3obj := fmt.Sprintf("%s/%s/%s",
+				backconf.S3.ObjectPath,
+				replconf.Replication.ReplSetName,
+				time.Now().Format("20060102150405",
+			))
 
-
-			s3upload.Zip(dbpath, s3bucket, s3obj)
+			s3upload.Zip(dbpath, backconf.S3.Bucket, s3obj)
 
 		}(v)
 	}
-
 	wg.Wait()
-	lvm.Cleanup(snappath, mountpath)
+
+	lvm.Cleanup(snappath, backconf.Cluster.Snapshot.MountPath)
 
 	return 0
 }
