@@ -6,7 +6,7 @@ LDFLAGS=-ldflags "-X main.Version=${VERSION} -X main.Build=${BUILD}"
 .DEFAULT_GOAL: build
 
 build:
-	gox ${LDFLAGS} -output "dist/${BINARY}_{{.OS}}_{{.Arch}}"
+	gox ${LDFLAGS} -osarch="linux/amd64" -output "dist/${BINARY}_{{.OS}}_{{.Arch}}"
 
 install:
 	go install ${LDFLAGS}
