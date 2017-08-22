@@ -3,10 +3,10 @@ VERSION=0.0.2
 BUILD=`git rev-parse HEAD`
 LDFLAGS=-ldflags "-X main.Version=${VERSION} -X main.Build=${BUILD}"
 
-.DEFAULT_GOAL: $(BINARY)
+.DEFAULT_GOAL: build
 
-$(BINARY):
-	go build ${LDFLAGS} -o ${BINARY}
+build:
+	gox ${LDFLAGS} -o dist/${BINARY}_{{.OS}}_{{.Arch}}"
 
 install:
 	go install ${LDFLAGS}

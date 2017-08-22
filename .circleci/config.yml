@@ -19,3 +19,12 @@ jobs:
           command: |
             trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
             make test | tee ${TEST_RESULTS}/go-test.out
+
+  deployment:
+    release:
+    branch: master
+    commands:
+      — go get github.com/mitchellh/gox
+      — go get github.com/tcnksm/ghr
+      — make build
+      — ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace `git describe --tags` dist/
