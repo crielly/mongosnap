@@ -25,6 +25,5 @@ publish:
 	-u ${CIRCLE_PROJECT_USERNAME} \
 	-r ${CIRCLE_PROJECT_REPONAME} \
 	--replace \
-	-prerelease \
 	v${VERSION} \
 	dist/
