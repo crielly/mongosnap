@@ -21,6 +21,7 @@ jobs:
             make test | tee ${TEST_RESULTS}/go-test.out
 
   deployment:
+    release:
     docker:
       - image: circleci/golang:1.8
     steps:
