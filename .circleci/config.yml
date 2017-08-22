@@ -23,7 +23,7 @@ jobs:
   deployment:
     release:
     branch: master
-    commands:
+    steps:
       — go get github.com/mitchellh/gox
       — go get github.com/tcnksm/ghr
       — make build
