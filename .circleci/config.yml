@@ -20,12 +20,10 @@ jobs:
             trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
             make test | tee ${TEST_RESULTS}/go-test.out
 
-  deployment:
-    release:
-    docker:
-      - image: circleci/golang:1.8
-    steps:
-      - run: go get github.com/mitchellh/gox
-      - run: go get github.com/tcnksm/ghr
-      - run: make build
-      - run: ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace `git describe --tags` dist/
+      deploy:
+        name: create github release
+        steps:
+          - run: go get github.com/mitchellh/gox
+          - run: go get github.com/tcnksm/ghr
+          - run: make build
+          - run: ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace `git describe --tags` dist/
