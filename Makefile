@@ -1,5 +1,5 @@
 BINARY=mongosnap
-VERSION=0.0.3
+VERSION=0.0.1
 BUILD=`git rev-parse HEAD`
 LDFLAGS=-ldflags "-X main.Version=${VERSION} -X main.Build=${BUILD}"
 
