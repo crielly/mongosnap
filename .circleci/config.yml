@@ -26,4 +26,4 @@ jobs:
             go get github.com/mitchellh/gox
             go get github.com/tcnksm/ghr
             make build
-            make publish
+            make --quiet publish
