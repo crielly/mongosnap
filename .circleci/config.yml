@@ -25,7 +25,7 @@ jobs:
     docker:
       - image: circleci/golang:1.8
     steps:
-      - go get github.com/mitchellh/gox
-      - go get github.com/tcnksm/ghr
-      - make build
-      - ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace `git describe --tags` dist/
+      - run: go get github.com/mitchellh/gox
+      - run: go get github.com/tcnksm/ghr
+      - run: make build
+      - run: ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace `git describe --tags` dist/
