@@ -1,5 +1,5 @@
 BINARY=mongosnap
-VERSION=0.0.2
+VERSION=0.0.3
 BUILD=`git rev-parse HEAD`
 LDFLAGS=-ldflags "-X main.Version=${VERSION} -X main.Build=${BUILD}"
 
@@ -20,4 +20,11 @@ test:
 	go test -v ./...
 
 publish:
-	ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} --replace v${VERSION} dist/
+	ghr \
+	-t ${GITHUB_TOKEN} \
+	-u ${CIRCLE_PROJECT_USERNAME} \
+	-r ${CIRCLE_PROJECT_REPONAME} \
+	--replace \
+	v${VERSION} \
+	-prerelease \
+	dist/
