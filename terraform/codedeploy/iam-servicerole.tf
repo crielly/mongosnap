@@ -1,6 +1,6 @@
-resource "aws_iam_role_policy" "codedeploy-policy" {
-  name = "codedeploy-policy"
-  role = "${aws_iam_role.codedeploy-role.id}"
+resource "aws_iam_role_policy" "codedeploy-mongosnap" {
+  name = "codedeploy-mongosnap"
+  role = "${aws_iam_role.codedeploy-mongosnap.id}"
 
   policy = <<EOF
 {
@@ -30,8 +30,8 @@ resource "aws_iam_role_policy" "codedeploy-policy" {
 EOF
 }
 
-resource "aws_iam_role" "codedeploy-role" {
-  name = "codedeploy-role"
+resource "aws_iam_role" "codedeploy-mongosnap" {
+  name = "codedeploy-mongosnap"
 
   assume_role_policy = <<EOF
 {

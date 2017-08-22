@@ -1,45 +1,38 @@
-provider "aws" {
-  profile = "${var.aws-credentials-profile}"
+variable "REGION" {}
+variable "NAMESPACE" {}
+variable "VPNCIDR" {}
+
+terraform {
+  backend "s3" {}
 }
 
-variable "region" {
-  default = "us-east-1"
-}
+data "aws_ami" "latest-hvm-1404-ami" {
+  most_recent = true
 
-variable "aws-credentials-profile" {}
-
-variable "artifact-bucket" {}
-
-variable "state-bucket" {}
-
-variable "github-oauth-token" {}
-
-data "terraform_remote_state" "codebuild" {
-  backend = "s3"
-
-  config {
-    bucket  = "${var.state-bucket}"
-    key     = "backend/codebuild.tfstate"
-    profile = "${var.aws-credentials-profile}"
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*"]
   }
-}
 
-data "terraform_remote_state" "codedeploy" {
-  backend = "s3"
-
-  config {
-    bucket  = "${var.state-bucket}"
-    key     = "backend/codedeploy.tfstate"
-    profile = "${var.aws-credentials-profile}"
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
   }
-}
 
-data "terraform_remote_state" "codepipeline" {
-  backend = "s3"
-
-  config {
-    bucket  = "${var.state-bucket}"
-    key     = "backend/codepipeline.tfstate"
-    profile = "${var.aws-credentials-profile}"
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
   }
+
+  filter {
+    name   = "block-device-mapping.volume-type"
+    values = ["gp2"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  owners = ["099720109477"]
 }

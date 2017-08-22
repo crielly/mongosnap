@@ -24,3 +24,7 @@ _testmain.go
 *.prof
 
 *.vscode
+
+*.terraform/
+*.tfstate
+*.tfstate.backup
