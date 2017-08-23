@@ -1,5 +1,7 @@
 version: 0.0
 os: linux
-files:
-  - source: mongosnap
-    destination: /usr/local/bin
+hooks:
+  Install:
+    - location: deploy/deploy.sh
+      timeout: 1800
+      runas: root
