@@ -32,8 +32,9 @@ jobs:
             make build
 
   deployment:
-    staging:
+    steps:
       branch: master
-      codedeploy:
-        mongosnap:
-          deployment_group: prod-mongosnap
+      staging:
+        codedeploy:
+          mongosnap:
+            deployment_group: prod-mongosnap
