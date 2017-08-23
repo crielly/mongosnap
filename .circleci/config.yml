@@ -31,7 +31,7 @@ jobs:
             trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
             make test | tee ${TEST_RESULTS}/go-test.out
           
-  compile_binary:
+  build:
     docker:
       - image: circleci/golang:1.8
     working_directory: /go/src/github.com/crielly/mongosnap
@@ -68,7 +68,7 @@ workflows:
       - run_tests:
           requires:
             - get_dependencies
-      - compile_binary:
+      - build:
           requires:
             - run_tests
       - deployment:
