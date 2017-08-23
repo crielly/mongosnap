@@ -15,8 +15,9 @@ jobs:
           command: |
             mkdir -p $TEST_RESULTS
             go get github.com/jstemmer/go-junit-report
-            git branch -u origin $CIRCLE_BRANCH
+            git branch -u origin ${CIRCLE_BRANCH}
             go get -u
+            pip install awscli
 
       - run:
           name: Run Unit Tests
