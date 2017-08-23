@@ -21,10 +21,24 @@ jobs:
             trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
             make test | tee ${TEST_RESULTS}/go-test.out
 
-      - deploy:
+      - publish:
           name: create github release
           command: |
             go get github.com/mitchellh/gox
             go get github.com/tcnksm/ghr
             make build
             make --quiet publish
+
+      - deployment:
+        production:
+          branch: master
+          codedeploy:
+            mongosnap:
+              application_root: /usr/local/bin/mongosnap
+              region: us-east-1
+              revision_location:
+                revision_type: S3
+                s3_location:
+                  bucket: tastycidr-mongosnap-us-east-1
+                  key_pattern: mongosnap-{BRANCH}-{SHORT_COMMIT}
+              deployment_group: prod-mongodump
