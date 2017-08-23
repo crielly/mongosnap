@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  checkout_code:
+  build:
     docker:
       - image: circleci/golang:1.8
     working_directory: /go/src/github.com/crielly/mongosnap
@@ -10,32 +10,20 @@ jobs:
     steps:
       - checkout
 
-  get_dependencies:
-    docker:
-      - image: circleci/golang:1.8
-    working_directory: /go/src/github.com/crielly/mongosnap
-    steps:
-      - run: mkdir -p $TEST_RESULTS
-      - run: go get github.com/jstemmer/go-junit-report
-      - run: git branch -u origin $CIRCLE_BRANCH
-      - run: go get -u
+      - run:
+          name: get dependencies for running tests
+          command: |
+            mkdir -p $TEST_RESULTS
+            go get github.com/jstemmer/go-junit-report
+            git branch -u origin $CIRCLE_BRANCH
+            go get -u
 
-  run_tests:
-    docker:
-      - image: circleci/golang:1.8
-    working_directory: /go/src/github.com/crielly/mongosnap
-    steps:
       - run:
           name: Run Unit Tests
           command: |
             trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
             make test | tee ${TEST_RESULTS}/go-test.out
           
-  build:
-    docker:
-      - image: circleci/golang:1.8
-    working_directory: /go/src/github.com/crielly/mongosnap
-    steps:
       - run:
           name: Build mongosnap binary
           command: |
@@ -56,21 +44,3 @@ jobs:
                 bucket: tastycidr-mongosnap-us-east-1
                 key_pattern: mongosnap-{BRANCH}-{SHORT_COMMIT}
             deployment_group: prod-mongodump
-
-workflows:
-  version: 2
-  build-and-deploy:
-    jobs:
-      - checkout_code
-      - get_dependencies:
-          requires:
-            - checkout_code
-      - run_tests:
-          requires:
-            - get_dependencies
-      - build:
-          requires:
-            - run_tests
-      - deployment:
-          requires:
-            - compile_binary
