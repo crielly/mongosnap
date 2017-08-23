@@ -45,6 +45,7 @@ jobs:
 
   deployment:
     production:
+      branch: master
         codedeploy:
           mongosnap:
             application_root: /usr/local/bin/mongosnap
