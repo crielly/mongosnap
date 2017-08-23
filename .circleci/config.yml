@@ -32,14 +32,8 @@ jobs:
             make build
 
   deployment:
-    production:
+    staging:
+      branch: master
       codedeploy:
         mongosnap:
-          application_root: /usr/local/bin/mongosnap
-          region: us-east-1
-          revision_location:
-            revision_type: S3
-            s3_location:
-              bucket: tastycidr-mongosnap-us-east-1
-              key_pattern: mongosnap-{BRANCH}-{SHORT_COMMIT}
-          deployment_group: prod-mongodump
+          deployment_group: prod-mongosnap
