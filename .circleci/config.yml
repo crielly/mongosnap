@@ -18,7 +18,7 @@ jobs:
             git branch -u origin ${CIRCLE_BRANCH}
             go get -u
             sudo apt-get install python-pip
-            pip install awscli
+            sudo pip install awscli
 
       - run:
           name: Run Unit Tests
