@@ -12,6 +12,7 @@ jobs:
       - checkout
       - run: mkdir -p $TEST_RESULTS
       - run: go get github.com/jstemmer/go-junit-report
+      - run: git branch -u origin $CIRCLE_BRANCH
       - run: go get -u
 
       - run:
