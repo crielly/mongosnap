@@ -17,7 +17,7 @@ jobs:
             go get github.com/jstemmer/go-junit-report
             git branch -u origin ${CIRCLE_BRANCH}
             go get -u
-            yum install -y python-pip
+            apt-get install python-pip
             pip install awscli
 
       - run:
