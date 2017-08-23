@@ -1,44 +1,76 @@
 version: 2
 jobs:
-  build:
+  checkout_code:
     docker:
       - image: circleci/golang:1.8
     working_directory: /go/src/github.com/crielly/mongosnap
-    
     environment:
       TEST_RESULTS: /tmp/test-results
 
     steps:
       - checkout
+
+  get_dependencies:
+    docker:
+      - image: circleci/golang:1.8
+    working_directory: /go/src/github.com/crielly/mongosnap
+    steps:
       - run: mkdir -p $TEST_RESULTS
       - run: go get github.com/jstemmer/go-junit-report
       - run: git branch -u origin $CIRCLE_BRANCH
       - run: go get -u
 
+  run_tests:
+    docker:
+      - image: circleci/golang:1.8
+    working_directory: /go/src/github.com/crielly/mongosnap
+    steps:
       - run:
-          name: Run unit tests
+          name: Run Unit Tests
           command: |
             trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
             make test | tee ${TEST_RESULTS}/go-test.out
-
-      - deploy:
-          name: create github release
+          
+  compile_binary:
+    docker:
+      - image: circleci/golang:1.8
+    working_directory: /go/src/github.com/crielly/mongosnap
+    steps:
+      - run:
+          name: Build mongosnap binary
           command: |
             go get github.com/mitchellh/gox
             go get github.com/tcnksm/ghr
             make build
-            make --quiet publish
 
+  deployment:
+    production:
+      branch: master
+        codedeploy:
+          mongosnap:
+            application_root: /usr/local/bin/mongosnap
+            region: us-east-1
+            revision_location:
+              revision_type: S3
+              s3_location:
+                bucket: tastycidr-mongosnap-us-east-1
+                key_pattern: mongosnap-{BRANCH}-{SHORT_COMMIT}
+            deployment_group: prod-mongodump
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - checkout_code
+      - get_dependencies:
+          requires:
+            - checkout_code
+      - run_tests:
+          requires:
+            - get_dependencies
+      - compile_binary:
+          requires:
+            - run_tests
       - deployment:
-        production:
-          branch: master
-          codedeploy:
-            mongosnap:
-              application_root: /usr/local/bin/mongosnap
-              region: us-east-1
-              revision_location:
-                revision_type: S3
-                s3_location:
-                  bucket: tastycidr-mongosnap-us-east-1
-                  key_pattern: mongosnap-{BRANCH}-{SHORT_COMMIT}
-              deployment_group: prod-mongodump
+          requires:
+            - compile_binary
