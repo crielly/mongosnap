@@ -17,8 +17,6 @@ jobs:
             go get github.com/jstemmer/go-junit-report
             git branch -u origin ${CIRCLE_BRANCH}
             go get -u
-            sudo apt-get install python-pip
-            sudo pip install awscli
 
       - run:
           name: Run Unit Tests
@@ -27,8 +25,9 @@ jobs:
             make test | tee ${TEST_RESULTS}/go-test.out
           
       - run:
-          name: Build mongosnap binary
+          name: Build mongosnap binary and publish it to github as a release
           command: |
             go get github.com/mitchellh/gox
             go get github.com/tcnksm/ghr
             make build
+            make publish
