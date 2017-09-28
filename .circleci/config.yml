@@ -4,27 +4,40 @@ jobs:
     docker:
       - image: circleci/golang:1.8
     working_directory: /go/src/github.com/crielly/mongosnap
-    
     environment:
       TEST_RESULTS: /tmp/test-results
 
     steps:
       - checkout
-      - run: mkdir -p $TEST_RESULTS
-      - run: go get github.com/jstemmer/go-junit-report
-      - run: git branch -u origin $CIRCLE_BRANCH
-      - run: go get -u
 
       - run:
-          name: Run unit tests
+          name: get dependencies for running tests
+          command: |
+            mkdir -p $TEST_RESULTS
+            go get github.com/jstemmer/go-junit-report
+            git branch -u origin ${CIRCLE_BRANCH}
+            go get -u
+            sudo apt-get install python-pip
+            sudo pip install awscli
+
+      - run:
+          name: Run Unit Tests
           command: |
             trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
             make test | tee ${TEST_RESULTS}/go-test.out
-
-      - deploy:
-          name: create github release
+          
+      - run:
+          name: Build mongosnap binary
           command: |
             go get github.com/mitchellh/gox
             go get github.com/tcnksm/ghr
             make build
-            make --quiet publish
+
+      - deploy:
+          name: Deploy to S3 if tests pass and branch is Master
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              aws s3 sync dist/ s3://tastycidr-mongosnap-us-east-1 --delete
+            else
+              echo "Not master branch so not deploying"
+            fi
