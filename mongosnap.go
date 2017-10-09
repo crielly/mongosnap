@@ -33,7 +33,7 @@ func realMain() int {
 		ErrorWriter: 	os.Stderr,
 	}
 
-	c := cli.NewCLI("mongosnap", "0.0.5")
+	c := cli.NewCLI("mongosnap", "0.0.6")
 
 	c.Args = os.Args[1:]
 
