@@ -31,7 +31,7 @@ ifeq ($(BRANCH),master)
 	v${VERSION} \
 	dist/
 else
-	@echo On branch $(BRANCH), publishing draft
+	@echo On branch $(BRANCH), publishing prerelease
 	ghr \
 	-t ${GITHUB_TOKEN} \
 	-u ${CIRCLE_PROJECT_USERNAME} \
