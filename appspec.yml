@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 hooks:
-  Install:
+  AfterInstall:
     - location: deploy/deploy.sh
       timeout: 1800
       runas: root
