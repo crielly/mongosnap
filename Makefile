@@ -1,5 +1,5 @@
 BINARY=mongosnap
-VERSION=0.0.7
+VERSION=0.0.1
 BUILD=`git rev-parse HEAD`
 BRANCH=$(shell git symbolic-ref --short HEAD)
 LDFLAGS=-ldflags "-X main.Version=${VERSION} -X main.Build=${BUILD}"
