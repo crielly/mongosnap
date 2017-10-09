@@ -37,7 +37,7 @@ else
 	-u ${CIRCLE_PROJECT_USERNAME} \
 	-r ${CIRCLE_PROJECT_REPONAME} \
 	--replace \
-	--draft \
+	--prerelease \
 	v${VERSION} \
 	dist/
 endif
