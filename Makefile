@@ -27,7 +27,7 @@ ifeq ($(BRANCH),master)
 	-t ${GITHUB_TOKEN} \
 	-u ${CIRCLE_PROJECT_USERNAME} \
 	-r ${CIRCLE_PROJECT_REPONAME} \
-	--replace \
+	--recreate \
 	v${VERSION} \
 	dist/
 else
@@ -36,7 +36,7 @@ else
 	-t ${GITHUB_TOKEN} \
 	-u ${CIRCLE_PROJECT_USERNAME} \
 	-r ${CIRCLE_PROJECT_REPONAME} \
-	--replace \
+	--recreate \
 	--prerelease \
 	v${VERSION} \
 	dist/
