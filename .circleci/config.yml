@@ -14,7 +14,7 @@ jobs:
           name: get dependencies for running tests
           command: |
             sudo apt-get install python-pip
-            pip install awscli
+            sudo pip install awscli
             mkdir -p $TEST_RESULTS
             go get github.com/jstemmer/go-junit-report
             git branch -u origin ${CIRCLE_BRANCH}
