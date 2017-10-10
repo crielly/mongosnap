@@ -53,5 +53,5 @@ if __name__ == '__main__':
     save_to_disk(
         release['assets'][0]['browser_download_url'],
         filepath,
-        "0555"
+        0555
     )
