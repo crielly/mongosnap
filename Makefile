@@ -41,3 +41,6 @@ else
 	v${VERSION} \
 	dist/
 endif
+
+versioncheck:
+	@echo ${VERSION}

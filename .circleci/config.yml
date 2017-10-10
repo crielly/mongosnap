@@ -31,3 +31,4 @@ jobs:
             go get github.com/tcnksm/ghr
             make build
             make publish
+            aws ssm put-parameter --name mongosnapversion --value "$(make versioncheck)" --type String --region us-east-1
