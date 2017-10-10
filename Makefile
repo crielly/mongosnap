@@ -1,6 +1,7 @@
 BINARY=mongosnap
-VERSION=0.0.7
+VERSION=0.0.2
 BUILD=`git rev-parse HEAD`
+BRANCH=$(shell git symbolic-ref --short HEAD)
 LDFLAGS=-ldflags "-X main.Version=${VERSION} -X main.Build=${BUILD}"
 
 .DEFAULT_GOAL: build
@@ -20,6 +21,8 @@ test:
 	go test -v ./...
 
 publish:
+ifeq ($(BRANCH),master)
+	@echo On branch master, publishing release
 	ghr \
 	-t ${GITHUB_TOKEN} \
 	-u ${CIRCLE_PROJECT_USERNAME} \
@@ -27,3 +30,17 @@ publish:
 	--replace \
 	v${VERSION} \
 	dist/
+else
+	@echo On branch $(BRANCH), publishing prerelease
+	ghr \
+	-t ${GITHUB_TOKEN} \
+	-u ${CIRCLE_PROJECT_USERNAME} \
+	-r ${CIRCLE_PROJECT_REPONAME} \
+	--replace \
+	--prerelease \
+	v${VERSION} \
+	dist/
+endif
+
+versioncheck:
+	@echo ${VERSION}

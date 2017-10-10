@@ -13,6 +13,8 @@ jobs:
       - run:
           name: get dependencies for running tests
           command: |
+            sudo apt-get install python-pip
+            sudo pip install awscli
             mkdir -p $TEST_RESULTS
             go get github.com/jstemmer/go-junit-report
             git branch -u origin ${CIRCLE_BRANCH}
@@ -31,3 +33,4 @@ jobs:
             go get github.com/tcnksm/ghr
             make build
             make publish
+            aws ssm put-parameter --name mongosnapversion --overwrite --value "v$(make versioncheck)" --type String --region us-east-1
