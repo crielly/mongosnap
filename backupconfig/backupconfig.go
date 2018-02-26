@@ -11,33 +11,31 @@ import (
 // necessary for performing an LVM snapshot and subsequent backup
 type Config struct {
 	Cluster struct {
-
 		Storage struct {
-			VolumeGroup 	string `json:"volumeGroup"`
-			LogicalVolume 	string `json:"logicalVolume"`
-			FileSystem 		string `json:"fileSystem"`
+			VolumeGroup   string `json:"volumeGroup"`
+			LogicalVolume string `json:"logicalVolume"`
+			FileSystem    string `json:"fileSystem"`
 		} `json:"storage"`
 
 		Snapshot struct {
-			MountPath 		string `json:"mountPath"`
-			Opts 			string `json:"opts"`
-			SnapshotName 	string `json:"snapshotName"`
-			Size 			string `json:"size"`
+			MountPath    string `json:"mountPath"`
+			Opts         string `json:"opts"`
+			SnapshotName string `json:"snapshotName"`
+			Size         string `json:"size"`
 		} `json:"snapshot"`
 
 		ReplicaConfs []string `json:"replicaConfs"`
-		
 	} `json:"cluster"`
 
 	S3 struct {
-		Bucket string `json:"bucket"`
+		Bucket     string `json:"bucket"`
 		ObjectPath string `json:"objectPath"`
 	} `json:"s3"`
 }
 
-// BackupConfig converts a yaml config describing  a MongoD Host's storage
+// BackupConfig converts a yaml config describing a MongoD Host's storage
 // configuration and replica set(s) and makes it available as a struct
-// for the purpose of running a backup against its various replsets 
+// for the purpose of running a backup against its various replsets
 func BackupConfig(configPath string) (replconf Config, err error) {
 
 	y, err := ioutil.ReadFile(configPath)

@@ -8,12 +8,12 @@
 package main
 
 import (
-	"log"
-	"github.com/mitchellh/cli"
-	"os"
-	"io/ioutil"
 	"github.com/crielly/mongosnap/command"
 	"github.com/crielly/mongosnap/logger"
+	"github.com/mitchellh/cli"
+	"io/ioutil"
+	"log"
+	"os"
 )
 
 func main() {
@@ -28,9 +28,9 @@ func realMain() int {
 	logger.Init(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr)
 
 	ui := &cli.BasicUi{
-		Reader:			os.Stdin,
-		Writer:			os.Stdout,
-		ErrorWriter: 	os.Stderr,
+		Reader:      os.Stdin,
+		Writer:      os.Stdout,
+		ErrorWriter: os.Stderr,
 	}
 
 	c := cli.NewCLI("mongosnap", "0.0.2")
@@ -41,7 +41,7 @@ func realMain() int {
 		"backup": func() (cli.Command, error) {
 			return &command.Backup{
 				UI: &cli.ColoredUi{
-					Ui:	ui,
+					Ui:          ui,
 					OutputColor: cli.UiColorBlue,
 				},
 			}, nil
@@ -49,7 +49,7 @@ func realMain() int {
 		"restore": func() (cli.Command, error) {
 			return &command.Restore{
 				UI: &cli.ColoredUi{
-					Ui:	ui,
+					Ui:          ui,
 					OutputColor: cli.UiColorYellow,
 				},
 			}, nil
@@ -67,4 +67,3 @@ func realMain() int {
 	return exitStatus
 
 }
-

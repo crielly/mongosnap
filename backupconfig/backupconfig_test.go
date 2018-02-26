@@ -2,7 +2,6 @@ package backupconfig
 
 import (
 	"testing"
-	
 )
 
 func TestBackupStorageConfig(t *testing.T) {
@@ -49,7 +48,6 @@ func TestBackupSnapConfig(t *testing.T) {
 		t.Errorf("Incorrect snapshot size - expected -onouuid,ro but got %s", backconf.Cluster.Snapshot.Opts)
 	}
 
-
 }
 
 func TestBackupS3Config(t *testing.T) {
@@ -85,7 +83,7 @@ func TestBackupReplConfs(t *testing.T) {
 		}
 		return false
 	}
-	
+
 	for _, a := range confs {
 		exists := check(a, backconf.Cluster.ReplicaConfs)
 		if exists != true {
