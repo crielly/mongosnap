@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	// Trace requires a comment to not trigger the linter!
-	Trace *log.Logger
+	// Debug requires a comment to not trigger the linter!
+	Debug *log.Logger
 	// Info shut up linter
 	Info *log.Logger
 	// Warning shut up linter
@@ -18,13 +18,13 @@ var (
 
 // Init logger handlers
 func Init(
-	traceHandle io.Writer,
+	debugHandle io.Writer,
 	infoHandle io.Writer,
 	warningHandle io.Writer,
 	errorHandle io.Writer) {
 
-	Trace = log.New(traceHandle,
-		"TRACE: ",
+	Debug = log.New(debugHandle,
+		"DEBUG: ",
 		log.Ldate|log.Ltime|log.Lshortfile)
 
 	Info = log.New(infoHandle,

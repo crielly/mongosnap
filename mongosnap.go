@@ -12,9 +12,10 @@ import (
 	"github.com/crielly/mongosnap/logger"
 	"github.com/mitchellh/cli"
 	"io/ioutil"
-	"log"
 	"os"
 )
+
+const version string = "0.0.3"
 
 func main() {
 	// Call realMain instead of doing the work here so we can use
@@ -33,7 +34,7 @@ func realMain() int {
 		ErrorWriter: os.Stderr,
 	}
 
-	c := cli.NewCLI("mongosnap", "0.0.2")
+	c := cli.NewCLI("mongosnap", version)
 
 	c.Args = os.Args[1:]
 
@@ -60,7 +61,7 @@ func realMain() int {
 	exitStatus, err := c.Run()
 
 	if err != nil {
-		log.Println(err)
+		logger.Error.Println(err)
 		return 1
 	}
 

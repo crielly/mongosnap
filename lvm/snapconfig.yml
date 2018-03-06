@@ -1,0 +1,10 @@
+snapshot:
+    vgname: smalldata
+    lvname: home
+    size: 1.0
+    snapshotName: testbackup
+    mountPath: /backup
+    mountPerms: 0644
+    mountflags: syscall.MS_RDONLY
+    mountdata: nouuid
+    fstype: xfs
