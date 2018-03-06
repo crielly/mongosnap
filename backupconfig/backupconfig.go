@@ -17,13 +17,6 @@ type Config struct {
 			FileSystem    string `json:"fileSystem"`
 		} `json:"storage"`
 
-		Snapshot struct {
-			MountPath    string `json:"mountPath"`
-			Opts         string `json:"opts"`
-			SnapshotName string `json:"snapshotName"`
-			Size         string `json:"size"`
-		} `json:"snapshot"`
-
 		ReplicaConfs []string `json:"replicaConfs"`
 	} `json:"cluster"`
 

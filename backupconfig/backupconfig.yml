@@ -4,11 +4,6 @@ cluster:
     volumeGroup: /dev/ephem_vg
     logicalVolume: ephem_lv
     fileSystem: xfs
-  snapshot:
-    mountPath: /backup
-    opts: -onouuid,ro
-    snapshotName: mongobackup
-    size: 100%FREE
   replicaConfs:
     - /etc/mongodb00.conf
     - /etc/mongodb01.conf
