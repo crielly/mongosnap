@@ -13,6 +13,7 @@ jobs:
       - run:
           name: get dependencies for running tests
           command: |
+            echo ${CIRCLE_PULL_REQUEST}
             mkdir -p $TEST_RESULTS
             go get github.com/jstemmer/go-junit-report
             git branch -u origin ${CIRCLE_BRANCH}
